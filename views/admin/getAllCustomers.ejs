@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Customers</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-top: 20px;
+        }
+
+        /* Filter Form */
+        form {
+            background: #fff;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button {
+            padding: 8px 15px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        /* Table Styles */
+        table {
+            width: 90%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #2c3e50;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        tr:hover {
+            background: #f1f1f1;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            table {
+                width: 100%;
+            }
+
+            form {
+                flex-direction: column;
+                width: 90%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h2>All Customers</h2>
+
+    <!-- Filter Form -->
+    <form method="GET" action="/getAllCustomers">
+        <label for="region">Filter by Region:</label>
+        <select name="region" id="region">
+            <option value="">All Regions</option>
+            <option value="paldi" <%= selectedRegion === "paldi" ? "selected" : "" %>>Paldi</option>
+            <option value="bopal" <%= selectedRegion === "bopal" ? "selected" : "" %>>Bopal</option>
+        </select>
+        <button type="submit">Filter</button>
+    </form>
+
+    <!-- Display Customers -->
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Gender</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Region</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (customers.length > 0) { %>
+                <% customers.forEach(customer => { %>
+                    <tr>
+                        <td><%= customer.name %> <%= customer.lastName %></td>
+                        <td><%= customer.email %></td>
+                        <td><%= customer.phone %></td>
+                        <td><%= customer.gender %></td>
+                        <td><%= customer.location.city %></td>
+                        <td><%= customer.location.state %></td>
+                        <td><%= customer.location.region %></td>
+                        <td><%= customer.bookingPeriod ? customer.bookingPeriod.start.toDateString() : "N/A" %></td>
+                        <td><%= customer.bookingPeriod ? customer.bookingPeriod.end.toDateString() : "N/A" %></td>
+                    </tr>
+                <% }); %>
+            <% } else { %>
+                <tr>
+                    <td colspan="7" style="text-align: center; color: red; font-weight: bold;">No customers found in this region</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+
+</body>
+</html>

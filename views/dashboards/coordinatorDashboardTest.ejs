@@ -1,0 +1,153 @@
+<style>
+    /* styles.css */
+
+/* Overall Card Styling */
+.card {
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: #f9f9f9;
+}
+
+/* Title Styles */
+.card h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Chef Section Styling */
+.card .border {
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #ffffff;
+}
+
+.card h4 {
+  font-size: 20px;
+  color: #555;
+}
+
+.card h5 {
+  font-size: 18px;
+  color: #777;
+}
+
+.card .mb-3 {
+  margin-bottom: 15px;
+}
+
+/* Absence Request Details */
+.card p {
+  font-size: 16px;
+  color: #444;
+  line-height: 1.6;
+}
+
+/* Form Fields */
+label {
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+textarea.form-control,
+select.form-select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+textarea.form-control {
+  resize: vertical;
+}
+
+.form-select {
+  font-size: 16px;
+}
+
+button.btn-primary {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+/* Missing Absence Period Message */
+p.no-absence-periods {
+  color: red;
+  font-style: italic;
+  font-size: 16px;
+}
+
+</style>
+<div class="container mt-5">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="text-center">Chef Absence Requests</h2>
+        <form id="updateChefRequestForm" action="/updateChefRequest" method="POST">
+          <% chefs.forEach((chef, chefIndex) => { %>
+            <div class="border p-3 mb-3">
+              <h4>Chef: <%= chef.name %></h4>
+              <h5>Absence Requests:</h5>
+  
+              <% if (!chef.absencePeriods || chef.absencePeriods.length === 0) { %>
+                <p>No absence requests found for this chef.</p>
+              <% } else { %>
+                <% chef.absencePeriods.forEach((absence, index) => { %>
+                  <div class="mb-3">
+                    <p><strong>Start Date:</strong> <%= absence.start ? absence.start.toDateString() : "N/A" %></p>
+                    <p><strong>End Date:</strong> <%= absence.end ? absence.end.toDateString() : "N/A" %></p>
+                    <p><strong>Reason:</strong> <%= absence.reason || "No reason provided" %></p>
+                    <p><strong>Status:</strong> <%= absence.status || "Pending" %></p>
+  
+                    <!-- Status Update Form Fields -->
+                    <div>
+                      <label for="status<%= chefIndex %>_<%= index %>">Update Status</label>
+                      <select id="status<%= chefIndex %>_<%= index %>" name="status" class="form-select" required>
+                        <option value="pending" <% if (absence.status === "pending") { %> selected <% } %>>Pending</option>
+                        <option value="approved" <% if (absence.status === "approved") { %> selected <% } %>>Approved</option>
+                        <option value="rejected" <% if (absence.status === "rejected") { %> selected <% } %>>Rejected</option>
+                      </select>
+                    </div>
+  
+                    <!-- Remarks Field -->
+                    <div class="mt-3">
+                      <label for="remarks<%= chefIndex %>_<%= index %>">Remarks</label>
+                      <textarea
+                        id="remarks<%= chefIndex %>_<%= index %>"
+                        name="remarks"
+                        rows="3"
+                        class="form-control"
+                        placeholder="Add remarks (optional)"
+                      ><%= absence.remarks || "" %></textarea>
+                    </div>
+  
+                    <!-- Hidden Fields -->
+                    <input type="hidden" name="chefId" value="<%= chef._id %>" />
+                    <input type="hidden" name="absenceIndex" value="<%= index %>" />
+  
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary mt-3">Update Request</button>
+                  </div>
+                <% }); %>
+              <% } %>
+            </div>
+          <% }); %>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  
+

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leave Requests</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 1rem;
+    }
+
+    .leave-request {
+      margin-bottom: 2rem;
+    }
+
+    .chef-name {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #007BFF;
+      margin-bottom: 0.5rem;
+    }
+
+    .leave-period {
+      background: #f1f1f1;
+      padding: 1rem;
+      border-radius: 5px;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .leave-info {
+      flex: 1;
+    }
+
+    .actions {
+      margin-left: 1rem;
+    }
+
+    .actions form {
+      display: inline-block;
+    }
+
+    button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button.reject {
+      background-color: #dc3545;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    p {
+      margin: 0.3rem 0;
+    }
+
+    small {
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Pending Leave Requests</h1>
+    <% if (leaveRequests.length > 0) { %>
+      <% leaveRequests.forEach((record) => { %>
+        <div class="leave-request">
+          <div class="chef-name"><%= record.chefName %></div>
+          <% record.leaveRequests.forEach((leave) => { %>
+            <div class="leave-period">
+              <div class="leave-info">
+                <p><strong>Start:</strong> <%= new Date(leave.start).toLocaleDateString() %></p>
+                <p><strong>End:</strong> <%= new Date(leave.end).toLocaleDateString() %></p>
+                <p><strong>Reason:</strong> <%= leave.reason %></p>
+                <small><strong>Status:</strong> <%= leave.status %></small>
+              </div>
+              <div class="actions">
+                <form action="/leave-request/<%= record.chefId %>/<%= leave._id %>" method="POST">
+                  <input type="hidden" name="_method" value="PUT" />
+                  <input type="hidden" name="status" value="approved" />
+                  <button type="submit">Approve</button>
+                </form>
+                <form action="/leave-request/<%= record.chefId %>/<%= leave._id %>" method="POST">
+                  <input type="hidden" name="_method" value="PUT" />
+                  <input type="hidden" name="status" value="denied" />
+                  <button type="submit" class="reject">Reject</button>
+                </form>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      <% }); %>
+    <% } else { %>
+      <p>No leave requests available.</p>
+    <% } %>
+  </div>
+</body>
+</html>

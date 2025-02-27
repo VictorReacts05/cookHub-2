@@ -1,0 +1,105 @@
+<% layout('./layout/boilderplate.ejs') %>
+
+<div class="container mt-5">
+  <h1 class="text-center text-primary">Book a Chef</h1>
+  <p class="text-center text-muted">Choose a duration and customize your preferences to book a chef.</p>
+  <form action="/chefHireRequest" method="POST" class="mt-4 shadow p-4 rounded bg-light">
+    <div class="form-group">
+      <label for="duration" class="form-label fw-bold">Select Duration</label>
+      <div class="d-flex gap-3">
+        <div class="form-check">
+          <input type="radio" class="form-check-input" id="oneMonth" name="duration" value="1" required>
+          <label class="form-check-label" for="oneMonth">1 Month</label>
+        </div>
+        <div class="form-check">
+          <input type="radio" class="form-check-input" id="threeMonths" name="duration" value="3">
+          <label class="form-check-label" for="threeMonths">3 Months</label>
+        </div>
+        <div class="form-check">
+          <input type="radio" class="form-check-input" id="sixMonths" name="duration" value="6">
+          <label class="form-check-label" for="sixMonths">6 Months</label>
+        </div>
+        <div class="form-check">
+          <input type="radio" class="form-check-input" id="twelveMonths" name="duration" value="12">
+          <label class="form-check-label" for="twelveMonths">12 Months</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hidden fields for start and end dates -->
+    <input type="hidden" id="monthStartDate" name="monthStartDate" required>
+    <input type="hidden" id="monthEndDate" name="monthEndDate" required>
+
+    <div class="form-group mt-4">
+      <label for="noOfMembers" class="form-label fw-bold">Number of Members</label>
+      <div class="d-flex align-items-center gap-2">
+        <button type="button" class="btn btn-secondary btn-sm" id="decrementMembers">-</button>
+        <input type="number" class="form-control w-25 text-center" id="noOfMembers" name="noOfMembers" value="1" min="1" readonly>
+        <button type="button" class="btn btn-secondary btn-sm" id="incrementMembers">+</button>
+      </div>
+    </div>
+
+    <div class="form-group mt-4">
+      <label for="dishCategory" class="form-label fw-bold">Dish Category</label>
+      <div class="d-flex flex-wrap gap-3">
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="dishCategoryPunjabi" name="dishCategory[]" value="Punjabi">
+          <label class="form-check-label" for="dishCategoryPunjabi">Punjabi</label>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="dishCategorySouthIndian" name="dishCategory[]" value="South Indian">
+          <label class="form-check-label" for="dishCategorySouthIndian">South Indian</label>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="dishCategoryGujarati" name="dishCategory[]" value="Gujarati">
+          <label class="form-check-label" for="dishCategoryGujarati">Gujarati</label>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="dishCategoryChinese" name="dishCategory[]" value="Chinese">
+          <label class="form-check-label" for="dishCategoryChinese">Chinese</label>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100 mt-4">Book Now</button>
+  </form>
+</div>
+
+<script>
+  const durationRadios = document.querySelectorAll('input[name="duration"]');
+  const monthStartDateInput = document.getElementById('monthStartDate');
+  const monthEndDateInput = document.getElementById('monthEndDate');
+
+  const membersInput = document.getElementById('noOfMembers');
+  const incrementButton = document.getElementById('incrementMembers');
+  const decrementButton = document.getElementById('decrementMembers');
+
+  // Update start and end dates based on duration
+  durationRadios.forEach((radio) => {
+    radio.addEventListener('change', () => {
+      const startDate = new Date(); // Current date
+      const durationMonths = parseInt(radio.value, 10);
+      const endDate = new Date(startDate); // Clone start date
+
+      // Add months to the end date
+      endDate.setMonth(endDate.getMonth() + durationMonths);
+
+      // Format dates as yyyy-mm-dd
+      const formatDate = (date) => date.toISOString().split('T')[0];
+
+      monthStartDateInput.value = formatDate(startDate);
+      monthEndDateInput.value = formatDate(endDate);
+    });
+  });
+
+  // Increment/Decrement functionality
+  incrementButton.addEventListener('click', () => {
+    membersInput.value = parseInt(membersInput.value, 10) + 1;
+  });
+
+  decrementButton.addEventListener('click', () => {
+    if (parseInt(membersInput.value, 10) > 1) {
+      membersInput.value = parseInt(membersInput.value, 10) - 1;
+    }
+  });
+</script>

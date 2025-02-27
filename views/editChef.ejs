@@ -1,0 +1,110 @@
+<% layout('./layout/boilderplate.ejs') %>
+<section>
+  <h1>Edit Chef Assignment</h1>
+
+  <h2>Booking Information</h2>
+  <table class="table table-bordered">
+    <tr>
+      <th>Customer Name</th>
+      <td><%= booking.clientid.name %></td>
+    </tr>
+    <tr>
+      <th>Customer Email</th>
+      <td><%= booking.clientid.email %></td>
+    </tr>
+    <tr>
+      <th>Current Chef</th>
+      <td><%= booking.chefid ? booking.chefid.name : "Not Assigned" %></td>
+    </tr>
+    <tr>
+      <th>Booking Period</th>
+      <td>
+        <%= booking.monthStartDate.toISOString().split("T")[0] %> to
+        <%= booking.monthEndDate.toISOString().split("T")[0] %>
+      </td>
+    </tr>
+    <tr>
+      <th>Current Time Slot</th>
+      <td>
+        <%= booking.startTime ? booking.startTime : "N/A" %> to
+        <%= booking.endTime ? booking.endTime : "N/A" %>
+      </td>
+    </tr>
+  </table>
+
+  <h2>Update Chef and Time Slot</h2>
+  <form action="/edit-chef" method="POST">
+    <input type="hidden" name="bookingId" value="<%= booking._id %>" />
+
+    <!-- Chef Selection -->
+    <div class="form-group">
+      <label for="chefId">New Chef:</label>
+      <select id="chefId" name="chefId" class="form-control" required onchange="updateChefBookings()">
+        <option value="">Select a Chef</option>
+        <% chefs.forEach((chef) => { %>
+        <option value="<%= chef._id %>" <%= chef._id.equals(booking.chefid?._id) ? "selected" : "" %>>
+          <%= chef.name %>
+        </option>
+        <% }); %>
+      </select>
+    </div>
+
+    <!-- Time Slot Selection -->
+    <div class="form-group">
+      <label for="startTime">Start Time:</label>
+      <input type="time" id="startTime" name="startTime" class="form-control" value="<%= booking.startTime || '' %>" required />
+    </div>
+    <div class="form-group">
+      <label for="endTime">End Time:</label>
+      <input type="time" id="endTime" name="endTime" class="form-control" value="<%= booking.endTime || '' %>" required />
+    </div>
+
+    <button type="submit" class="btn btn-success">Update Chef</button>
+  </form>
+
+  <h2>Chef's Booking History</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Booking ID</th>
+        <th>Client Name</th>
+        <th>Chef Name</th>
+        <th>Dish Categories</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+      </tr>
+    </thead>
+    <tbody id="chefBookings">
+      <% chefBookings.forEach(booking => { %>
+      <tr class="chef-booking" data-chef-id="<%= booking.chefid?._id || '' %>">
+        <td><%= booking._id %></td>
+        <td><%= booking.clientid.name || 'N/A' %></td>
+        <td><%= booking.chefid?.name || 'N/A' %></td>
+        <td><%= booking.dishCategory.join(", ") || 'N/A' %></td>
+        <td><%= booking.monthStartDate.toISOString().split('T')[0] %></td>
+        <td><%= booking.monthEndDate.toISOString().split('T')[0] %></td>
+        <td><%= booking.startTime || 'N/A' %></td>
+        <td><%= booking.endTime || 'N/A' %></td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</section>
+
+<script>
+  function updateChefBookings() {
+    const selectedChefId = document.getElementById("chefId").value;
+    const bookings = document.querySelectorAll(".chef-booking");
+
+    bookings.forEach((row) => {
+      const chefId = row.getAttribute("data-chef-id");
+      if (chefId === selectedChefId || selectedChefId === "") {
+        row.style.display = ""; // Show row
+      } else {
+        row.style.display = "none"; // Hide row
+      }
+    });
+  }
+</script>

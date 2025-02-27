@@ -1,0 +1,91 @@
+<% layout('./layout/boilderplate.ejs') %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .panel-header {
+      background-color: #343a40;
+      color: white;
+      padding: 1rem;
+    }
+    .card {
+      border: none;
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body>
+  <header class="panel-header text-center">
+    <h1>Admin Panel</h1>
+    <p>Manage Chef Information, Client Information, and Dishes</p>
+  </header>
+
+  <div class="container mt-5">
+    <div class="row">
+      <!-- Chef Info Section -->
+      <div class="col-md-4">
+        <div class="card text-center">
+          <div class="card-body">
+            <h3 class="card-title">addMeal Data Information</h3>
+            <p class="card-text">View and manage chef availability, salaries, and details.</p>
+            <a href="/addMealData" class="btn btn-primary">Manage Chefs</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Client Info Section -->
+      <div class="col-md-4">
+        <div class="card text-center">
+          <div class="card-body">
+            <h3 class="card-title">Client Information</h3>
+            <p class="card-text">View and manage client bookings, schedules, and feedback.</p>
+            <a href="/getAllCustomers" class="btn btn-primary">Manage Clients</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dishes CRUD Section -->
+      <div class="col-md-4">
+        <div class="card text-center">
+          <div class="card-body">
+            <h3 class="card-title">Dishes Information</h3>
+            <p class="card-text">Add, edit, or delete dishes from the menu.</p>
+            <a href="/mealList" class="btn btn-primary">Manage Dishes</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+   <!-- Get all Chefs -->
+   <div class="col-md-4">
+    <div class="card text-center">
+      <div class="card-body">
+        <h3 class="card-title">Dishes Information</h3>
+        <p class="card-text">Add, edit, or delete dishes from the menu.</p>
+        <a href="/getAllChefs" class="btn btn-primary">Manage Dishes</a>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+ 
+  <footer class="text-center mt-5">
+    <p>&copy; 2024 Cooking Website Admin Panel. All rights reserved.</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

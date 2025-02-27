@@ -1,0 +1,85 @@
+<% layout('./layout/boilderplate.ejs') %>
+
+<div class="container">
+  <h1 class="text-center my-4">Chef Information</h1>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h3 class="card-title"><%= user.name %> <%= user.lastName %></h3>
+      <p><strong>Email:</strong> <%= user.email %></p>
+      <p><strong>Role:</strong> <%= role %></p>
+    </div>
+  </div>
+
+
+  <% if (chefInfo) { %>
+  <div class="card mb-4">
+    <div class="card-body">
+      <h4>Chef Details</h4>
+      <p><strong>Description:</strong> <%= chefInfo.chefDescription %></p>
+      <p><strong>Experience:</strong> <%= chefInfo.chefExperience %> years</p>
+      <% if (chefInfo.chefLocation) { %>
+      <h5>Address</h5>
+      <p><%= chefInfo.chefLocation.street %>, <%= chefInfo.chefLocation.city %>,
+        <%= chefInfo.chefLocation.state %>, <%= chefInfo.chefLocation.postalCode %>
+      </p>
+      <% } else { %>
+      <p>No address provided.</p>
+      <% } %>
+    </div>
+  </div>
+  <% } %>
+  <div class="card mb-4">
+    <div class="card-body">
+      <h4>Chef Ratings</h4>
+      <p><strong>Average Rating:</strong> <%= averageRating %> / 5</p>
+      <% if (ratings.length > 0) { %>
+      <ul class="list-group">
+        <% ratings.forEach(rating => { %>
+        <li class="list-group-item">
+          <strong>Rating:</strong> <%= rating.rating %> / 5
+          <br>
+          <strong>Review:</strong> <%= rating.reviews %>
+          <br>
+          <strong>By:</strong> <%= rating.custmerId.name %> <%= rating.custmerId.lastName %>
+        </li>
+        <% }) %>
+      </ul>
+      <% } else { %>
+      <p>No ratings available for this chef.</p>
+      <% } %>
+    </div>
+  </div>
+
+</div>
+<!-- Chef Ratings Section -->
+
+<div class="container mt-5">
+  <h1 class="text-center">Rate Your Chef</h1>
+
+  <form action="/rateChef/<%= chefId %>" method="POST" class="mt-4">
+    <div class="mb-3">
+      <label for="rating" class="form-label">Rating (1 to 5)</label>
+      <input type="number" class="form-control" id="rating" name="rating" min="1" max="5" required placeholder="Enter a rating from 1 to 5" />
+    </div>
+
+    <div class="mb-3">
+      <label for="reviews" class="form-label">Your Review</label>
+      <textarea class="form-control" id="reviews" name="reviews" rows="4" required placeholder="Share your experience with the chef"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit Rating</button>
+  </form>
+  <% if (isAvailable) { %>
+  <a href="/chefHireRequest" class="btn btn-primary mt-3">Hire Now</a>
+  <% } else { %>
+  <p class="text-danger mt-3">
+    <% if (activeBooking) { %>
+    You already have an active booking with a chef until <%= activeBooking.monthEndDate.toDateString() %>.
+    Please wait until your current booking ends to hire another chef.
+    <% } else { %>
+    Chef is unavailable for booking.
+    <% } %>
+  </p>
+  <% } %>
+</div>

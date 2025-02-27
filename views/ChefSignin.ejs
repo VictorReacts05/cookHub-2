@@ -1,0 +1,116 @@
+<% layout('./layout/boilderplate.ejs') %>
+
+<div class="container mt-5">
+  <h1 class="text-center">Chef Signup</h1>
+  <form action="/chefsignin" method="POST" class="row g-3 needs-validation" novalidate>
+    <!-- First Name -->
+    <div class="col-md-6">
+      <label for="name" class="form-label">First Name</label>
+      <input type="text" class="form-control" id="name" name="name" required>
+      <div class="invalid-feedback">Please provide your first name.</div>
+    </div>
+
+    <!-- Last Name -->
+    <div class="col-md-6">
+      <label for="lastName" class="form-label">Last Name</label>
+      <input type="text" class="form-control" id="lastName" name="lastName" required>
+      <div class="invalid-feedback">Please provide your last name.</div>
+    </div>
+
+    <!-- Date of Birth -->
+    <div class="col-md-6">
+      <label for="dateOfBirth" class="form-label">Date of Birth</label>
+      <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth">
+    </div>
+
+    <!-- Aadhaar Card -->
+    <div class="col-md-6">
+      <label for="aadhaarCard" class="form-label">Aadhaar Card</label>
+      <input type="text" class="form-control" id="aadhaarCard" name="aadhaarCard">
+    </div>
+
+    <!-- PAN Card -->
+    <div class="col-md-6">
+      <label for="panCard" class="form-label">PAN Card</label>
+      <input type="text" class="form-control" id="panCard" name="panCard">
+    </div>
+
+    <!-- Driving License Number -->
+    <div class="col-md-6">
+      <label for="drivingLicenseNo" class="form-label">Driving License Number</label>
+      <input type="text" class="form-control" id="drivingLicenseNo" name="drivingLicenseNo">
+    </div>
+
+    <!-- Email -->
+    <div class="col-md-6">
+      <label for="email" class="form-label">Email</label>
+      <input type="email" class="form-control" id="email" name="email" required>
+      <div class="invalid-feedback">Please provide a valid email.</div>
+    </div>
+
+    <!-- Password -->
+    <div class="col-md-6">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" class="form-control" id="password" name="password" required>
+      <div class="invalid-feedback">Please provide a password.</div>
+    </div>
+
+    <!-- Phone -->
+    <div class="col-md-6">
+      <label for="phone" class="form-label">Phone</label>
+      <input type="text" class="form-control" id="phone" name="phone" required pattern="[0-9]{10}">
+      <div class="invalid-feedback">Please provide a valid 10-digit phone number.</div>
+    </div>
+
+    <!-- Gender -->
+    <div class="col-md-6">
+      <label for="gender" class="form-label">Gender</label>
+      <select id="gender" class="form-select" name="gender" required>
+        <option value="" selected disabled>Select Gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="other">Other</option>
+      </select>
+      <div class="invalid-feedback">Please select your gender.</div>
+    </div>
+
+    <!-- Background Check Verified -->
+    <div class="col-md-12">
+      <label for="backgroundCheckVerified" class="form-label">Background Check</label>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="backgroundCheckVerified" name="backgroundCheckVerified" value="true">
+        <label class="form-check-label" for="backgroundCheckVerified">I have completed my background check</label>
+      </div>
+    </div>
+
+    <!-- Role -->
+    <input type="hidden" name="role" value="chef">
+
+    <!-- Submit Button -->
+    <div class="col-12">
+      <button class="btn btn-primary w-100" type="submit">Sign Up as Chef</button>
+    </div>
+
+    <!-- Redirect to Login -->
+    <div class="col-12 text-center">
+      <p>Already have an account? <a href="/login">Login here</a>.</p>
+    </div>
+  </form>
+</div>
+
+<script>
+  // Bootstrap validation script
+  (function() {
+    'use strict';
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(function(form) {
+      form.addEventListener('submit', function(event) {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  })();
+</script>

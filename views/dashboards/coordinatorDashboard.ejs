@@ -1,0 +1,177 @@
+<% layout('./layout/boilderplate.ejs') %>
+
+<section class="container my-4">
+  <h1 class="text-center text-primary mb-4">Coordinator Dashboard</h1>
+
+  <!-- Display chefs from the same region -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h2 class="card-title">Chefs from Your Region</h2>
+    </div>
+    <div class="card-body">
+      <table class="table table-hover table-striped table-bordered">
+        <thead class="table-dark">
+          <tr>
+            <th>Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Region</th>
+            <th>Gender</th>
+            <th>Aadhaar Card</th>
+            <th>PAN Card</th>
+            <th>Driving License</th>
+            <th>Background Check Verified</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% chefs.forEach(chef => { %>
+          <tr>
+            <td><%= chef.name || 'N/A' %></td>
+            <td><%= chef.lastName || 'N/A' %></td>
+            <td><%= chef.email || 'N/A' %></td>
+            <td><%= chef.phone || 'N/A' %></td>
+            <td><%= chef.location.region || 'N/A' %></td>
+            <td><%= chef.gender || 'N/A' %></td>
+            <td><%= chef.aadhaarCard || 'N/A' %></td>
+            <td><%= chef.panCard || 'N/A' %></td>
+            <td><%= chef.drivingLicenseNo || 'N/A' %></td>
+            <td><%= chef.backgroundCheckVerified ? 'Yes' : 'No' %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Display customers from the same region -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header bg-success text-white">
+      <h2 class="card-title">Customers from Your Region</h2>
+    </div>
+    <div class="card-body">
+      <table class="table table-hover table-striped table-bordered">
+        <thead class="table-dark">
+          <tr>
+            <th>Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Region</th>
+            <th>Gender</th>
+            <th>Date of Birth</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% customers.forEach(customer => { %>
+          <tr>
+            <td><%= customer.name || 'N/A' %></td>
+            <td><%= customer.lastName || 'N/A' %></td>
+            <td><%= customer.email || 'N/A' %></td>
+            <td><%= customer.phone || 'N/A' %></td>
+            <td><%= customer.location.region || 'N/A' %></td>
+            <td><%= customer.gender || 'N/A' %></td>
+            <td><%= customer.dateOfBirth ? customer.dateOfBirth.toISOString().split('T')[0] : 'N/A' %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Customers without assigned chefs -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header bg-warning text-dark">
+      <h2 class="card-title">Customers Without Assigned Chefs</h2>
+    </div>
+    <div class="card-body">
+      <table class="table table-hover table-striped table-bordered">
+        <thead class="table-dark">
+          <tr>
+            <th>Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Region</th>
+            <th>Gender</th>
+            <th>Number of Members</th>
+            <th>Dish Categories</th>
+            <th>Booking Period</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% unassignedBookings.forEach(booking => { %>
+          <tr>
+            <td><%= booking.clientid.name || 'N/A' %></td>
+            <td><%= booking.clientid.lastName || 'N/A' %></td>
+            <td><%= booking.clientid.email || 'N/A' %></td>
+            <td><%= booking.clientid.phone || 'N/A' %></td>
+            <td><%= booking.clientid.location?.region || 'N/A' %></td>
+            <td><%= booking.clientid.gender || 'N/A' %></td>
+            <td><%= booking.noOfMembers || 'N/A' %></td>
+            <td><%= booking.dishCategory.join(", ") || 'N/A' %></td>
+            <td>
+              <%= booking.monthStartDate.toISOString().split('T')[0] %> to
+              <%= booking.monthEndDate.toISOString().split('T')[0] %>
+            </td>
+            <td>
+              <a href="/allocate-chef/<%= booking._id %>" class="btn btn-primary btn-sm">
+                Allocate Chef
+              </a>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+
+  <!-- Customers with assigned chefs -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header bg-info text-white">
+      <h2 class="card-title">Customers with Assigned Chefs</h2>
+    </div>
+    <div class="card-body">
+      <table class="table table-hover table-striped table-bordered">
+        <thead class="table-dark">
+          <tr>
+            <th>Customer Name</th>
+            <th>Customer Email</th>
+            <th>Chef Name</th>
+            <th>Chef Email</th>
+            <th>Booking Period</th>
+            <th>Allocated Time</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% assignedBookings.forEach(booking => { %>
+          <tr>
+            <td><%= booking.clientid.name %></td>
+            <td><%= booking.clientid.email %></td>
+            <td><%= booking.chefid.name %></td>
+            <td><%= booking.chefid.email %></td>
+            <td>
+              <%= booking.monthStartDate.toISOString().split("T")[0] %> to
+              <%= booking.monthEndDate.toISOString().split("T")[0] %>
+            </td>
+            <td>
+              <%= booking.startTime || 'N/A' %> to <%= booking.endTime || 'N/A' %>
+            </td>
+            <td>
+              <a href="/edit-chef/<%= booking._id %>" class="btn btn-success btn-sm">
+                Edit Chef
+              </a>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  
+</section>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chef Management</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+  <% layout('./layout/boilderplate.ejs') %>
+  <div class="container mt-5">
+    <h1 class="text-center mb-4">Chef Management</h1>
+
+    <!-- Filter Form -->
+    <form method="GET" action="/chefs" class="mb-4 row g-3">
+      <div class="col-md-3">
+        <input type="text" name="name" class="form-control" placeholder="Search by Name" value="<%= name || '' %>">
+      </div>
+      <div class="col-md-3">
+        <input type="email" name="email" class="form-control" placeholder="Search by Email" value="<%= email || '' %>">
+      </div>
+      <div class="col-md-2">
+        <select name="gender" class="form-select">
+          <option value="">All Genders</option>
+          <option value="male" <%= gender === 'male' ? 'selected' : '' %>>Male</option>
+          <option value="female" <%= gender === 'female' ? 'selected' : '' %>>Female</option>
+          <option value="other" <%= gender === 'other' ? 'selected' : '' %>>Other</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <select name="region" class="form-select">
+          <option value="">All Regions</option>
+          <% chefs.forEach(chef => { %>
+            <% if (chef.location && chef.location.region) { %>
+              <option value="<%= chef.location.region %>" <%= selectedRegion === chef.location.region ? 'selected' : '' %>><%= chef.location.region %></option>
+            <% } %>
+          <% }) %>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <select name="backgroundCheckVerified" class="form-select">
+          <option value="">Background Check</option>
+          <option value="true" <%= backgroundCheckVerified === 'true' ? 'selected' : '' %>>Verified</option>
+          <option value="false" <%= backgroundCheckVerified === 'false' ? 'selected' : '' %>>Pending</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-primary">Filter</button>
+      </div>
+    </form>
+
+    <!-- Table for displaying chef details -->
+    <table class="table table-striped table-bordered">
+      <thead class="table-dark">
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Gender</th>
+          <th>Region</th>
+          <th>Background Check</th>
+          <th>Booking Period</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (chefs.length > 0) { %>
+          <% chefs.forEach((chef) => { %>
+            <tr>
+              <td><%= chef.name %> <%= chef.lastName %></td>
+              <td><%= chef.email %></td>
+              <td><%= chef.phone %></td>
+              <td><%= chef.gender %></td>
+              <td>
+                <% if (chef.location && chef.location.region) { %>
+                  <%= chef.location.region %>
+                <% } else { %>
+                  Not Assigned
+                <% } %>
+              </td>
+              <td>
+                <% if (chef.backgroundCheckVerified) { %>
+                  <span class="badge bg-success">Verified</span>
+                <% } else { %>
+                  <span class="badge bg-warning text-dark">Pending</span>
+                <% } %>
+              </td>
+              <td>
+                <% if (chef.bookingPeriod && chef.bookingPeriod.start && chef.bookingPeriod.end) { %>
+                  <span class="badge bg-info">
+                    <%= new Date(chef.bookingPeriod.start).toLocaleDateString() %> -
+                    <%= new Date(chef.bookingPeriod.end).toLocaleDateString() %>
+                  </span>
+                <% } else { %>
+                  <span class="badge bg-secondary">Not Assigned</span>
+                <% } %>
+              </td>
+            </tr>
+          <% }) %>
+        <% } else { %>
+          <tr>
+            <td colspan="7" class="text-center">No chefs available</td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

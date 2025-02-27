@@ -1,0 +1,44 @@
+.nav-link:hover {
+  color: #007BFF; /* Change color on hover */
+  text-decoration: underline;
+}
+
+.btn-primary {
+  background-color: #007BFF;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-outline-primary {
+  border-color: #007BFF;
+  color: #007BFF;
+}
+
+.btn-outline-primary:hover {
+  background-color: #007BFF;
+  color: white;
+}
+
+footer {
+  margin-top: 10rem; /* Pushes the footer to the bottom */
+  background-color: #343a40; /* Bootstrap dark color */
+  color: white;
+  text-align: center;
+  padding: 15px 0;
+  /* position: fixed;
+  bottom: 0; */
+  width: 100%;
+}
+
+footer a {
+  color: white;
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
