@@ -42,6 +42,19 @@ const clientbookinfoSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  unavailableDates: [
+    {
+      startDate: {
+        type: Date,
+        required: true,
+      },
+      endDate: {
+        type: Date,
+        default: function () {
+          return this.startDate; // Default to startDate if not provided (single day)
+        },
+      },}
+  ],
 });
 
 const ClientBookInfo = mongoose.model("ClientBookInfo", clientbookinfoSchema);

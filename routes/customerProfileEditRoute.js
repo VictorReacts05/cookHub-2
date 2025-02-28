@@ -3,9 +3,19 @@ const updateProfile = require("../controllers/update-profileController");
 const express = require("express");
 const router = express.Router();
 
-router.get("/update-profile",authorizeRoles("coordinator","admin","customer"), verifyToken, (req, res) => {
+/* router.get("/update-profile",authorizeRoles("coordinator","admin","customer"), verifyToken, (req, res) => {
   res.render("updateProfile"); // Render the profile update form
-});
+}); */
+
+router.get(
+  "/update-profile",
+  verifyToken,
+  authorizeRoles("coordinator", "admin", "customer"),
+  (req, res) => {
+    res.render("updateProfile"); // Render the profile update form
+  }
+);
+
 router.post("/update-profile", verifyToken, updateProfile);
 
 module.exports = router;

@@ -169,6 +169,7 @@
           <th>End Date</th>
           <th>Service Fee</th>
           <th>Members</th>
+          <th>Unavailable Dates</th>
         </tr>
       </thead>
       <tbody>
@@ -182,6 +183,29 @@
           <td><%= new Date(booking.monthEndDate).toLocaleDateString() %></td>
           <td><%= booking.serviceFees ? booking.serviceFees.amount : "N/A" %></td>
           <td><%= booking.noOfMembers %></td>
+
+          <td>
+            <% if (booking.unavailableDates && booking.unavailableDates.length> 0) { %>
+              <ul>
+                <% booking.unavailableDates.forEach(date=> { %>
+                  <li>
+                    <% if (date.startDate) { %>
+                      <%= date.startDate.toLocaleDateString() %>
+                        <% if (date.endDate && date.endDate.toDateString() !==date.startDate.toDateString()) { %>
+                          - <%= date.endDate.toLocaleDateString() %>
+                            <% } %>
+                              <% } else { %>
+                                <span class="text-danger">Missing start date</span>
+                                <% } %>
+                                  <!-- **Change**: Removed `reason` display -->
+                  </li>
+                  <% }) %>
+              </ul>
+              <% } else { %>
+                None
+                <% } %>
+          </td>
+
         </tr>
         <% }); %>
         <% } else { %>

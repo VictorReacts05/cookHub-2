@@ -36,7 +36,6 @@ const chefunAvailable = async (req, res) => {
   }
 };
 
-
 const chefDescription = async (req, res) => {
   try {
     const { chefDescription } = req.body;
@@ -187,36 +186,97 @@ const bookChef = async (req, res) => {
   }
 };
 
-   
-    
-    // const chefAddress = async (req, res) => {
-    //   try {
-    //     const { street, city, state, postalCode, region } = req.body;
-    //     const chefId = req.user._id;
-    
-    //     // Create or update the address document
-    //     const newAddress = await address.create({
-    //       street,
-    //       city,
-    //       state,
-    //       postalCode,
-    //       region,
-    //     });
-    
-    //     // Update the chef's availability document with the address reference
-    //     await User.findOneAndUpdate(
-    //       { _id: chefId },
-    //       { chefLocation: newAddress._id },
-    //       { new: true, upsert: true }
-    //     );
-    
-    //     res.redirect("/dashboard");
-    //   } catch (error) {
-    //     console.error("Error updating address:", error);
-    //     res.status(500).send("Internal server error");
-    //   }
-    // };
+const modifyChefAppointment = async (req, res) => {
+  try {
+    const clientId = req.user._id;
+    const { startDate, endDate } = req.body; // **Change**: Removed `reason` from destructuring
+    const bookingId = req.params.bookingId;
 
+    if (!bookingId || !startDate) {
+      return res
+        .status(400)
+        .json({ message: "Booking ID and start date are required" });
+    }
+
+    const start = new Date(startDate);
+    const end = endDate ? new Date(endDate) : start;
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      return res.status(400).json({ message: "Invalid date format" });
+    }
+
+    if (start > end) {
+      return res
+        .status(400)
+        .json({ message: "Start date must be before or equal to end date" });
+    }
+
+    const booking = await ClientBookInfo.findOne({
+      _id: bookingId,
+      clientid: clientId,
+    });
+
+    if (!booking) {
+      return res
+        .status(404)
+        .json({ message: "Booking not found or not authorized" });
+    }
+
+    if (start < booking.monthStartDate || end > booking.monthEndDate) {
+      return res
+        .status(400)
+        .json({ message: "Dates must be within the booking period" });
+    }
+
+    const existingRange = booking.unavailableDates.find(
+      (d) =>
+        d.startDate.toDateString() === start.toDateString() &&
+        d.endDate.toDateString() === end.toDateString()
+    );
+
+    if (!existingRange) {
+      booking.unavailableDates.push({
+        startDate: start,
+        endDate: end,
+        // **Change**: Removed `reason` field here
+      });
+    }
+
+    await booking.save();
+
+    res.redirect("/dashboard");
+  } catch (error) {
+    console.error("Error modifying chef appointment:", error);
+    res.status(500).json({ message: "Internal server error", error });
+  }
+};
+
+// const chefAddress = async (req, res) => {
+//   try {
+//     const { street, city, state, postalCode, region } = req.body;
+//     const chefId = req.user._id;
+
+//     // Create or update the address document
+//     const newAddress = await address.create({
+//       street,
+//       city,
+//       state,
+//       postalCode,
+//       region,
+//     });
+
+//     // Update the chef's availability document with the address reference
+//     await User.findOneAndUpdate(
+//       { _id: chefId },
+//       { chefLocation: newAddress._id },
+//       { new: true, upsert: true }
+//     );
+
+//     res.redirect("/dashboard");
+//   } catch (error) {
+//     console.error("Error updating address:", error);
+//     res.status(500).send("Internal server error");
+//   }
+// };
 
 module.exports = {
   chefunAvailable,
@@ -225,9 +285,5 @@ module.exports = {
   chefInfo,
   submitChefRating,
   bookChef,
-  // deleteAllAbsencePeriods
-  // chefAddress,
-  // viewLeaveHistory,
+  modifyChefAppointment, // Add this
 };
-
-

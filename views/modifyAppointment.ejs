@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modify Chef Appointment</title>
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+
+<body>
+  <% layout('./layout/boilderplate.ejs') %>
+
+    <div class="container mt-5">
+      <h1 class="text-center">Modify Chef Appointment</h1>
+      <p class="text-center text-muted">Mark dates when you won’t be available for the chef to visit.</p>
+
+      <form action="/modify-appointment/<%= bookingId %>" method="POST" class="mt-4 shadow p-4 rounded bg-light">
+        <div class="form-group mb-3">
+          <label for="startDate" class="form-label fw-bold">Start Date</label>
+          <input type="date" class="form-control" id="startDate" name="startDate" required>
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="endDate" class="form-label fw-bold">End Date (optional, defaults to Start Date)</label>
+          <input type="date" class="form-control" id="endDate" name="endDate">
+        </div>
+
+        <!-- **Change**: Removed `reason` field -->
+
+        <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+      </form>
+    </div>
+
+    <script src="/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

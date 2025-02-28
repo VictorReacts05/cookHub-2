@@ -1,5 +1,5 @@
 const express = require("express");
-const { verifyToken,authorizeRoles } = require("../middlewares/authMiddleware");
+const { verifyToken, authorizeRoles } = require("../middlewares/authMiddleware");
 // const { verifyToken, } = require("../middlewares/authMiddleware"); // Path to your middleware file
 const checkCustomerDetails = require("../middlewares/checkCustomerDetails"); // Path to your middleware file
 const {
@@ -8,7 +8,8 @@ const {
   chefDescription,
   chefExperience,
   bookChef,
-  submitChefRating
+  submitChefRating,
+  modifyChefAppointment
 } = require("../controllers/chefController"); // Path to your controller file
 const router = express.Router();
 
@@ -35,6 +36,21 @@ router.get("/chefHireRequest/", verifyToken,authorizeRoles("customer","admin"), 
 });
 
 router.post("/chefHireRequest", verifyToken, checkCustomerDetails, bookChef);
+
+router.get(
+  "/modify-appointment/:bookingId",
+  verifyToken,
+  authorizeRoles("customer"),
+  (req, res) => {
+    res.render("modifyAppointment", { bookingId: req.params.bookingId });
+  }
+);
+router.post(
+  "/modify-appointment/:bookingId",
+  verifyToken,
+  authorizeRoles("customer"),
+  modifyChefAppointment
+);
 
 
 module.exports = router;

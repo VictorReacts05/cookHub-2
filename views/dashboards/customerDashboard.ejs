@@ -1,42 +1,83 @@
 <% layout('./layout/boilderplate.ejs') %>
 
-<h1 class="text-center my-4">Welcome, <%= user.name %>!</h1>
-<h2 class="text-center mb-4">Available Chefs</h2>
+  <h1 class="text-center my-4">Welcome, <%= user.name %>!</h1>
+  <h2 class="text-center mb-4">Available Chefs</h2>
 
-<div class="container">
-  <div class="row">
-    <% chefUsers.forEach(chef => { %>
-    <div class="col-md-4">
-      <div class="card mb-4">
-        <div class="card-body">
-          <h5 class="card-title"><%= chef.name %> <%= chef.lastName %></h5>
-          <p class="card-text"><strong>Email:</strong> <%= chef.email %></p>
-          <p class="card-text"><strong>Gender:</strong> <%= chef.gender %></p>
-          <p class="card-text"><strong>Background Check:</strong> <%= chef.backgroundCheckVerified ? "Verified" : "Not Verified" %></p>
-          <a href="/chefInfo/<%= chef.id %>" class="btn btn-primary">Hire Chef</a>
+  <div class="container">
+    <div class="row">
+      <% chefUsers.forEach(chef=> { %>
+        <div class="col-md-4">
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">
+                <%= chef.name %>
+                  <%= chef.lastName %>
+              </h5>
+              <p class="card-text"><strong>Email:</strong>
+                <%= chef.email %>
+              </p>
+              <p class="card-text"><strong>Gender:</strong>
+                <%= chef.gender %>
+              </p>
+              <p class="card-text"><strong>Background Check:</strong>
+                <%= chef.backgroundCheckVerified ? "Verified" : "Not Verified" %>
+              </p>
+              <a href="/chefInfo/<%= chef.id %>" class="btn btn-primary">Hire Chef</a>
+            </div>
+          </div>
         </div>
-      </div>
+        <% }) %>
     </div>
-    <% }) %>
   </div>
-</div>
 
-<h2 class="text-center mb-4">Your Bookings</h2>
+  <h2 class="text-center mb-4">Your Bookings</h2>
 
-<div class="container">
-  <div class="row">
-    <% clientBookings.forEach(booking => { %>
-    <div class="col-md-4">
-      <div class="card mb-4">
-        <div class="card-body">
-          <h5 class="card-title">Booking with Chef <%= booking.chefid.name %> <%= booking.chefid.lastName %></h5>
-          <p class="card-text"><strong>Chef Email:</strong> <%= booking.chefid.email %></p>
-          <p class="card-text"><strong>Chef Gender:</strong> <%= booking.chefid.gender %></p>
-          <p class="card-text"><strong>Members:</strong> <%= booking.noOfMembers %></p>
-          <p class="card-text"><strong>Dish Categories:</strong> <%= booking.dishCategory.join(', ') %></p>
+  <div class="container">
+    <div class="row">
+      <% clientBookings.forEach(booking=> { %>
+        <div class="col-md-4">
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">Booking with Chef <%= booking.chefid.name %>
+                  <%= booking.chefid.lastName %>
+              </h5>
+              <p class="card-text"><strong>Chef Email:</strong>
+                <%= booking.chefid.email %>
+              </p>
+              <p class="card-text"><strong>Chef Gender:</strong>
+                <%= booking.chefid.gender %>
+              </p>
+              <p class="card-text"><strong>Members:</strong>
+                <%= booking.noOfMembers %>
+              </p>
+              <p class="card-text"><strong>Dish Categories:</strong>
+                <%= booking.dishCategory.join(', ') %></p>
           <p class="card-text"><strong>Booking Period:</strong> <%= booking.monthStartDate.toDateString() %> to <%= booking.monthEndDate.toDateString() %></p>
           <p class="card-text"><strong>Service Fee Paid:</strong> <%= booking.serviceFeePaid ? "Yes" : "No" %></p>
           <p class="card-text"><strong>Service Fee:</strong> <%= booking.serviceFees ? booking.serviceFees.fee : "N/A" %></p>
+          
+          <p class="card-text"><strong>Unavailable Dates:</strong></p>
+          <% if (booking.unavailableDates && booking.unavailableDates.length> 0) { %>
+            <ul>
+              <% booking.unavailableDates.forEach(date=> { %>
+                <li>
+                  <% if (date.startDate) { %>
+                    <%= date.startDate.toDateString() %>
+                      <% if (date.endDate && date.endDate.toDateString() !==date.startDate.toDateString()) { %>
+                        - <%= date.endDate.toDateString() %>
+                          <% } %>
+                            <% } else { %>
+                              <span class="text-danger">Missing start date</span>
+                              <% } %>
+                                <!-- **Change**: Removed `reason` display -->
+                </li>
+                <% }) %>
+            </ul>
+            <% } else { %>
+              <p>No unavailable dates set.</p>
+              <% } %>
+                <a href="/modify-appointment/<%= booking._id %>" class="btn btn-warning mt-2">Modify Appointment</a>
+          
         </div>
       </div>
     </div>
