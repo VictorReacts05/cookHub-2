@@ -1,0 +1,80 @@
+<% layout('./layout/boilderplate.ejs') %>
+
+    <div class="container mt-5">
+        <h1 class="text-center">Verify Customer Details</h1>
+        <p class="text-center text-muted">Enter your observations after visiting the customer.</p>
+
+        <form action="/verify-booking/<%= bookingId %>" method="POST" class="mt-4 shadow p-4 rounded bg-light">
+            <input type="hidden" name="bookingId" value="<%= bookingId %>">
+
+            <div class="form-group mb-3">
+                <label for="verifiedMembers" class="form-label fw-bold">Verified Number of Members</label>
+                <input type="number" class="form-control" id="verifiedMembers" name="verifiedMembers" required
+                    placeholder="e.g., 4">
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="hasKitchenTools" class="form-label fw-bold">Has Necessary Kitchen Tools?</label>
+                <select class="form-control" id="hasKitchenTools" name="hasKitchenTools" required>
+                    <option value="">Select an option</option>
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="kitchenCleanliness" class="form-label fw-bold">Kitchen Cleanliness</label>
+                <select class="form-control" id="kitchenCleanliness" name="kitchenCleanliness" required>
+                    <option value="">Select an option</option>
+                    <option value="excellent">Excellent</option>
+                    <option value="good">Good</option>
+                    <option value="fair">Fair</option>
+                    <option value="poor">Poor</option>
+                </select>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="cookingSpace" class="form-label fw-bold">Cooking Space</label>
+                <select class="form-control" id="cookingSpace" name="cookingSpace" required>
+                    <option value="">Select an option</option>
+                    <option value="spacious">Spacious</option>
+                    <option value="adequate">Adequate</option>
+                    <option value="limited">Limited</option>
+                </select>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="specialRequirements" class="form-label fw-bold">Special Requirements</label>
+                <textarea class="form-control" id="specialRequirements" name="specialRequirements" rows="3"
+                    placeholder="e.g., Gluten-free diet required"></textarea>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="accessNotes" class="form-label fw-bold">Access to Home Notes</label>
+                <textarea class="form-control" id="accessNotes" name="accessNotes" rows="3"
+                    placeholder="e.g., Use back door, gate code: 1234"></textarea>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="additionalNotes" class="form-label fw-bold">Additional Notes</label>
+                <textarea class="form-control" id="additionalNotes" name="additionalNotes" rows="3"
+                    placeholder="e.g., Customer has extra utensils"></textarea>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="form-label fw-bold">Should the Chef Visit?</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="shouldChefVisit" id="shouldChefVisitYes"
+                        value="yes" required>
+                    <label class="form-check-label" for="shouldChefVisitYes">Yes</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="shouldChefVisit" id="shouldChefVisitNo"
+                        value="no">
+                    <label class="form-check-label" for="shouldChefVisitNo">No</label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Submit Verification</button>
+        </form>
+    </div>

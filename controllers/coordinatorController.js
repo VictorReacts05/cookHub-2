@@ -4,6 +4,7 @@ const PersonType = require("../models/personType");
 const bcrypt = require("bcrypt");
 const ClientBookInfo = require("../models/customer/clientBookInfo");
 const ChefAvailable = require("../models/chef/chefAvaliable");
+const Verification = require("../models/verification");
 
 const coordinatorSignup = async (req, res) => {
   try {
@@ -116,7 +117,6 @@ const renderAllocateChefPage = async (req, res) => {
   }
 };
 
-
 const allocateChef = async (req, res) => {
   try {
     const { bookingId, chefId, startTime, endTime } = req.body;
@@ -226,7 +226,7 @@ const updateChef = async (req, res) => {
   }
 };
 
-// View Leave Requests of chefs 
+// View Leave Requests of chefs
 const viewLeaveRequests = async (req, res) => {
   try {
     const regionId = req.user.regionId; // Assuming coordinator's region is stored in `req.user`
@@ -245,7 +245,9 @@ const viewLeaveRequests = async (req, res) => {
     const response = leaveRequests.map((record) => ({
       chefName: record.chefId.name,
       chefId: record.chefId._id, // Include chefId for form submission
-      leaveRequests: record.absencePeriods.filter((period) => period.status === "pending"),
+      leaveRequests: record.absencePeriods.filter(
+        (period) => period.status === "pending"
+      ),
     }));
 
     console.log(response);
@@ -258,10 +260,8 @@ const viewLeaveRequests = async (req, res) => {
   }
 };
 
-
 // Update Leave Request Status
 const updateLeaveRequestStatus = async (req, res) => {
-
   try {
     const { chefId, absenceId } = req.params; // Extract chefId and absenceId from the URL
     const { status } = req.body; // Extract status from the request body
@@ -283,15 +283,68 @@ const updateLeaveRequestStatus = async (req, res) => {
     }
 
     res.status(200).send("Leave request status updated successfully.");
-  }
-  catch (error) {
+  } catch (error) {
     console.error("Error updating leave request status:", error);
     res.status(500).send("Internal Server Error");
   }
 };
 
 
+const submitVerification = async (req, res) => {
+  try {
+    const coordinatorId = req.user._id;
+    const {
+      bookingId,
+      verifiedMembers,
+      hasKitchenTools,
+      kitchenCleanliness,
+      cookingSpace,
+      specialRequirements,
+      accessNotes,
+      additionalNotes,
+      shouldChefVisit, // Used only for decision, not saved
+    } = req.body;
 
+    // Validate required fields
+    if (
+      !bookingId ||
+      !verifiedMembers ||
+      hasKitchenTools === undefined ||
+      !kitchenCleanliness ||
+      !cookingSpace ||
+      !shouldChefVisit
+    ) {
+      return res
+        .status(400)
+        .json({ message: "All required fields must be filled" });
+    }
+
+    // If "No" is selected, redirect without saving
+    if (shouldChefVisit === "no") {
+      return res.redirect("/dashboard");
+    }
+
+    // If "Yes" is selected, save the data (without shouldChefVisit)
+    const verification = new Verification({
+      bookingId,
+      coordinatorId,
+      verifiedMembers,
+      hasKitchenTools,
+      kitchenCleanliness,
+      cookingSpace,
+      specialRequirements,
+      accessNotes,
+      additionalNotes,
+    });
+
+    await verification.save();
+
+    res.redirect("/dashboard");
+  } catch (error) {
+    console.error("Error submitting verification:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
 
 module.exports = {
   coordinatorSignup,
@@ -301,7 +354,8 @@ module.exports = {
   renderEditChefPage,
   updateChef,
   viewLeaveRequests,
-  updateLeaveRequestStatus
+  updateLeaveRequestStatus,
   // viewLeaveRequests,
   // updateLeaveRequestStatus,
+  submitVerification,
 };

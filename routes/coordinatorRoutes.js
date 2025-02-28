@@ -10,6 +10,7 @@ const {
   viewLeaveRequests,
   updateLeaveRequestStatus
 } = require("../controllers/coordinatorController");
+const { submitVerification } = require("../controllers/coordinatorController");
 const { verifyToken,authorizeRoles } = require("../middlewares/authMiddleware");
 
 // Render Coordinator Signup Form
@@ -39,5 +40,21 @@ router.get("/leave-requests", verifyToken,authorizeRoles("coordinator","admin"),
 
 router.post("/leave-request/:chefId/:absenceId", verifyToken, updateLeaveRequestStatus);
 
+router.get(
+  "/verify-booking/:bookingId",
+  verifyToken,
+  authorizeRoles("coordinator"),
+  (req, res) => {
+    res.render("verifyBooking", { bookingId: req.params.bookingId });
+  }
+);
+
+// Handle form submission
+router.post(
+  "/verify-booking/:bookingId",
+  verifyToken,
+  authorizeRoles("coordinator"),
+  submitVerification
+);
 
 module.exports = router;
